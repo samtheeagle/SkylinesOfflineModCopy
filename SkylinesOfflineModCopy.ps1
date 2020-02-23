@@ -5,7 +5,9 @@
 ##
 
 # Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+# Set-ExecutionPolicy RemoteSigned -Scope LocalMachine
 # Set-ExecutionPolicy Restricted -Scope CurrentUser
+# Set-ExecutionPolicy Restricted -Scope LocalMachine
 
 # $env:PROCESSOR_ARCHITECTURE
 # HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam
@@ -25,6 +27,8 @@ Get-ChildItem -Path $WorkshopContentFolder -Directory | ForEach-Object {
         New-Item -ItemType Directory -Force -Path $LocalModPath
         Get-ChildItem -Path $CurrentModFolder.FullName | Copy-Item -Destination $LocalModPath -Recurse -Container
     } Else {
-        Get-ChildItem -Path $CurrentModFolder.FullName -Recurse | Copy-Item -Destination $LocalUserAddonsFolder\Assets
+        Set-Variable LocalAssetPath -value ($LocalUserAddonsFolder + "\Assets\" + $CurrentModFolder)
+        New-Item -ItemType Directory -Force -Path $LocalAssetPath 
+        Get-ChildItem -Path $CurrentModFolder.FullName -Recurse | Copy-Item -Destination $LocalAssetPath
     }
 }
